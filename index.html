@@ -31,37 +31,32 @@
         </div>
     </header>
 
-    <!-- 筛选栏 -->
-    <div class="filter-bar">
-        <div class="filter-scroll">
-            <button class="filter-chip active" data-campus="all">全部</button>
-            <div class="filter-group">
-                <span class="filter-group-title">南区</span>
-                <button class="filter-chip" data-campus="south-1-3">1-3栋</button>
-                <button class="filter-chip" data-campus="south-4-6">4-6栋</button>
-                <button class="filter-chip" data-campus="south-7-9">7-9栋</button>
-                <button class="filter-chip" data-campus="south-10-12">10-12栋</button>
-                <button class="filter-chip" data-campus="south-13-14">13-14栋</button>
-            </div>
-            <div class="filter-group">
-                <span class="filter-group-title">北区</span>
-                <button class="filter-chip" data-campus="north-17-21">17-21栋</button>
-                <button class="filter-chip" data-campus="north-24-28">24-28栋</button>
-                <button class="filter-chip" data-campus="north-29">29栋</button>
-                <button class="filter-chip" data-campus="north-zhuanjia">专家楼</button>
-            </div>
-        </div>
-        <div class="category-filter">
-            <select id="categorySelect" class="category-select">
-                <option value="all">全部分类</option>
-                <option value="food">🍔 外卖</option>
-                <option value="drink">🧋 奶茶</option>
-                <option value="supermarket">🛒 超市</option>
-                <option value="other">📦 其他</option>
-            </select>
-        </div>
+  <!-- 筛选栏 -->
+<div class="filter-bar">
+    <div class="filter-scroll">
+        <button class="filter-chip active" data-campus="all">全部</button>
+        <!-- 南区宿舍楼 -->
+        <button class="filter-chip" data-campus="south-1-3">南区1-3栋</button>
+        <button class="filter-chip" data-campus="south-4-6">南区4-6栋</button>
+        <button class="filter-chip" data-campus="south-7-9">南区7-9栋</button>
+        <button class="filter-chip" data-campus="south-10-12">南区10-12栋</button>
+        <button class="filter-chip" data-campus="south-13-14">南区13-14栋</button>
+        <!-- 北区宿舍楼 -->
+        <button class="filter-chip" data-campus="north-17-21">北区17-21栋</button>
+        <button class="filter-chip" data-campus="north-24-28">北区24-28栋</button>
+        <button class="filter-chip" data-campus="north-29">北区29栋</button>
+        <button class="filter-chip" data-campus="north-zhuanjia">北区专家楼</button>
     </div>
-
+    <div class="category-filter">
+        <select id="categorySelect" class="category-select">
+            <option value="all">全部分类</option>
+            <option value="food">🍔 外卖</option>
+            <option value="drink">🧋 奶茶</option>
+            <option value="supermarket">🛒 超市</option>
+            <option value="other">📦 其他</option>
+        </select>
+    </div>
+</div>
    <!-- 推荐拼单区域 -->
 <section class="recommendation-section" id="recommendationSection" style="display: none;">
     <div class="section-header">
