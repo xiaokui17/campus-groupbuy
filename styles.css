@@ -1562,5 +1562,58 @@ body {
     .recommendation-section {
         margin-top: 70px;
     }
+
+
+    /* ========== 强制修复推荐区域标题显示 ========== */
+.recommendation-section {
+    display: block !important;
+    margin: 16px !important;
+    margin-top: 70px !important;
+    padding: 0 !important;
+}
+
+.recommendation-section .section-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 12px !important;
+    padding: 0 4px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.recommendation-section .section-title {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.recommendation-section .section-title .section-icon {
+    display: inline-block !important;
+    font-size: 18px !important;
+}
+
+.recommendation-section .section-title span:last-child {
+    display: inline-block !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+}
+
+.recommendation-section .section-count {
+    display: inline-block !important;
+    font-size: 12px !important;
+    color: #9ca3af !important;
+    background: #f3f4f6 !important;
+    padding: 2px 8px !important;
+    border-radius: 20px !important;
+}
+
+.recommendation-list {
+    display: flex !important;
+    overflow-x: auto !important;
+    gap: 12px !important;
+    padding: 4px 0 16px 0 !important;
+}
 }
 }
