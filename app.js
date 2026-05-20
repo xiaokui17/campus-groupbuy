@@ -532,72 +532,28 @@ async function renderGroupBuyList() {
             // 从后端获取数据
             groupBuys = await fetchGroupBuysFromAPI(campusFilter, categoryFilter);
             
-            // 如果后端返回空数据，尝试从本地获取
-            if (groupBuys.length === 0) {
-                console.log('后端返回空数据，尝试从本地获取');
-                checkExpiredGroupBuys();
-                groupBuys = getGroupBuys();
-                
-                // 应用筛选
-                if (campusFilter !== 'all') {
-                    groupBuys = groupBuys.filter(gb => gb.campus === campusFilter);
-                }
-                if (categoryFilter !== 'all') {
-                    groupBuys = groupBuys.filter(gb => gb.category === categoryFilter);
-                }
-            } else {
-                // 将后端数据转换为前端格式
-                groupBuys = groupBuys.map(item => ({
-                    id: item.id,
-                    merchant: item.title,
-                    description: item.description,
-                    category: item.category === '美食' ? 'food' : (item.category === '日用品' ? 'supermarket' : 'other'),
-                    campus: item.location,
-                    totalAmount: 0, // 后端没有存储总金额，需要从description解析或者默认
-                    currentCount: item.current_count,
-                    targetCount: item.target_count,
-                    deadline: item.expire_time,
-                    wechatId: item.organizer,
-                    image: item.image,
-                    status: item.status,
-                    createdAt: item.created_at
-                }));
-            }
-        } else {
-            // 从本地存储获取
-            checkExpiredGroupBuys();
-            groupBuys = getGroupBuys();
-            
-            // 应用筛选
-            if (campusFilter !== 'all') {
-                groupBuys = groupBuys.filter(gb => gb.campus === campusFilter);
-            }
-            if (categoryFilter !== 'all') {
-                groupBuys = groupBuys.filter(gb => gb.category === categoryFilter);
-            }
+            // 将后端数据转换为前端格式
+            groupBuys = groupBuys.map(item => ({
+                id: item.id,
+                merchant: item.title,
+                description: item.description,
+                category: item.category === '美食' ? 'food' : (item.category === '日用品' ? 'supermarket' : 'other'),
+                campus: item.location,
+                totalAmount: 0,
+                currentCount: item.current_count,
+                targetCount: item.target_count,
+                deadline: item.expire_time,
+                wechatId: item.organizer,
+                image: item.image,
+                status: item.status,
+                createdAt: item.created_at
+            }));
         }
     } catch (error) {
         console.error('获取拼单列表失败:', error);
-        showToast('获取数据失败，已切换到本地模式', 'error');
-        // 降级到本地存储
-        checkExpiredGroupBuys();
-        groupBuys = getGroupBuys();
-        
-        // 应用筛选
-        if (campusFilter !== 'all') {
-            groupBuys = groupBuys.filter(gb => gb.campus === campusFilter);
-        }
-        if (categoryFilter !== 'all') {
-            groupBuys = groupBuys.filter(gb => gb.category === categoryFilter);
-        }
+        showToast('获取数据失败', 'error');
+        groupBuys = [];
     }
-    
-    // 按状态和截止时间排序
-    groupBuys.sort((a, b) => {
-        if (a.status === 'active' && b.status === 'ended') return -1;
-        if (a.status === 'ended' && b.status === 'active') return 1;
-        return new Date(b.createdAt) - new Date(a.createdAt);
-    });
     
     listContainer.innerHTML = '';
     
@@ -613,7 +569,6 @@ async function renderGroupBuyList() {
         });
     }
 }
-
 async function renderRecommendations() {
     const recommendationSection = document.getElementById('recommendationSection');
     const recommendationList = document.getElementById('recommendationList');
@@ -643,8 +598,6 @@ async function renderRecommendations() {
                     status: item.status,
                     createdAt: item.created_at
                 }));
-        } else {
-            groupBuys = getGroupBuys().filter(gb => gb.status === 'active');
         }
     } catch (error) {
         console.error('获取推荐列表失败:', error);
