@@ -10,17 +10,32 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
   
+  // 获取 URL 参数
+  const { searchParams } = new URL(req.url, `http://${req.headers.host}`);
+  const campus = searchParams.get('campus');
+  const category = searchParams.get('category');
+  
   const supabase = createClient(supabaseUrl, supabaseKey);
   
   try {
-    const { data, error } = await supabase
-      .from('groups')
-      .select('*')
-      .order('created_at', { ascending: false });
+    let query = supabase.from('groups').select('*');
+    
+    // 按校区精确筛选
+    if (campus && campus !== 'all') {
+      query = query.eq('location', campus);
+    }
+    
+    // 按分类筛选
+    if (category && category !== 'all') {
+      query = query.eq('category', category);
+    }
+    
+    const { data, error } = await query.order('created_at', { ascending: false });
     
     if (error) throw error;
     res.status(200).json({ success: true, data: data });
   } catch (error) {
+    console.error('API 错误:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 }
