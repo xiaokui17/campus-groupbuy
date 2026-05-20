@@ -406,7 +406,7 @@ function getGroupBuyImage(groupBuy) {
 function renderGroupBuyCard(groupBuy, index) {
     const categoryInfo = CONFIG.CATEGORY_MAP[groupBuy.category] || CONFIG.CATEGORY_MAP['other'];
     const campusName = CONFIG.CAMPUS_MAP[groupBuy.campus] || groupBuy.campus;
-    const perPerson = calculateAA(groupBuy.totalAmount, groupBuy.currentCount);
+    const perPerson = calculateAA(groupBuy.totalAmount, groupBuy.targetCount);
     const progress = (groupBuy.currentCount / groupBuy.targetCount) * 100;
     const countdown = getCountdown(groupBuy.deadline);
     const isEnded = groupBuy.status === 'ended' || countdown.isEnded;
@@ -468,7 +468,7 @@ function renderGroupBuyCard(groupBuy, index) {
  */
 function renderRecommendationCard(groupBuy, index) {
     const campusName = CONFIG.CAMPUS_MAP[groupBuy.campus] || groupBuy.campus;
-    const perPerson = calculateAA(groupBuy.totalAmount, groupBuy.currentCount);
+  const perPerson = calculateAA(groupBuy.totalAmount, groupBuy.targetCount);
     
     const card = document.createElement('div');
     card.className = 'recommendation-card';
@@ -668,7 +668,7 @@ async function renderDetailContent(groupBuyId) {
     
     const categoryInfo = CONFIG.CATEGORY_MAP[groupBuy.category] || CONFIG.CATEGORY_MAP['other'];
     const campusName = CONFIG.CAMPUS_MAP[groupBuy.campus] || groupBuy.campus;
-    const perPerson = calculateAA(groupBuy.totalAmount, groupBuy.currentCount);
+   const perPerson = calculateAA(groupBuy.totalAmount, groupBuy.targetCount);
     const progress = (groupBuy.currentCount / groupBuy.targetCount) * 100;
     const countdown = getCountdown(groupBuy.deadline);
     const isEnded = groupBuy.status === 'ended' || countdown.isEnded;
@@ -697,7 +697,7 @@ async function renderDetailContent(groupBuyId) {
                 <div class="detail-item-value highlight">¥${formatPrice(groupBuy.totalAmount)}</div>
             </div>
             <div class="detail-item">
-                <div class="detail-item-label">人均费用</div>
+                <div class="detail-item-label">拼成后人均</div>
                 <div class="detail-item-value success">¥${perPerson}</div>
             </div>
             <div class="detail-item">
