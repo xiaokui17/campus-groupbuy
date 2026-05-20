@@ -244,17 +244,18 @@ async function fetchGroupBuysFromAPI(campus, category) {
 async function createGroupBuyToAPI(groupBuy) {
     // 转换分类名称
     const catMap = { 'food': '美食', 'drink': '美食', 'supermarket': '日用品', 'other': '其他' };
-    const apiData = {
-        title: groupBuy.merchant,
-        description: groupBuy.description,
-        category: catMap[groupBuy.category] || groupBuy.category,
-        location: groupBuy.campus,
-        currentCount: groupBuy.currentCount,
-        targetCount: groupBuy.targetCount,
-        expireTime: groupBuy.deadline,
-        image: groupBuy.image,
-        organizer: groupBuy.wechatId
-    };
+   const apiData = {
+    title: groupBuy.merchant,
+    description: groupBuy.description,
+    category: catMap[groupBuy.category] || groupBuy.category,
+    location: groupBuy.campus,
+    currentCount: groupBuy.currentCount,
+    targetCount: groupBuy.targetCount,
+    totalAmount: groupBuy.totalAmount,  // 新增这一行
+    expireTime: groupBuy.deadline,
+    image: groupBuy.image,
+    organizer: groupBuy.wechatId
+};
     const result = await apiCall('/groups-create', {
         method: 'POST',
         body: JSON.stringify(apiData)
