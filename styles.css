@@ -243,16 +243,16 @@ body {
     margin: 0 auto;
 }
 
-/* ========== 推荐拼单区域 - 修复版 ========== */
+/* ========== 推荐拼单区域 ========== */
 .recommendation-section {
     margin: 16px;
     margin-top: calc(var(--header-height) + var(--filter-height) + 16px);
-    margin-bottom: 0px;
+    margin-bottom: 8px;
     position: relative;
     z-index: 10;
 }
 
-/* 关键：确保标题区域正常显示 */
+/* 推荐区域标题 */
 .recommendation-section .section-header {
     display: flex;
     justify-content: space-between;
@@ -282,33 +282,16 @@ body {
     border-radius: 20px;
 }
 
+/* 推荐列表 - 居中显示 */
 .recommendation-list {
     display: flex;
-    overflow-x: auto;
-    gap: 12px;
-    padding: 8px 8px 16px 8px;
-    scrollbar-width: thin;
-    scrollbar-color: #c1c1c1 #f1f1f1;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 8px 0 16px 0;
 }
 
-.recommendation-list::-webkit-scrollbar {
-    height: 6px;
-}
-
-.recommendation-list::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-.recommendation-list::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-}
-
-.recommendation-list::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-
+/* 推荐卡片 */
 .recommendation-card {
     flex: 0 0 auto;
     width: 260px;
@@ -316,6 +299,11 @@ body {
     border-radius: 14px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.recommendation-card:hover {
+    transform: translateY(-4px);
 }
 
 .recommendation-card .rec-image {
@@ -388,6 +376,7 @@ body {
     font-size: 10px;
     color: #aaa;
 }
+
 /* ==================== 拼单卡片列表 ==================== */
 .groupbuy-list-section {
     padding: 0 var(--space-md);
