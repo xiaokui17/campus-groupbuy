@@ -617,79 +617,59 @@ async function renderGroupBuyList() {
 /**
  * 渲染推荐列表
  */
-function renderRecommendations() {
+async function renderRecommendations() {
     const recommendationSection = document.getElementById('recommendationSection');
     const recommendationList = document.getElementById('recommendationList');
     const recommendationCount = document.getElementById('recommendationCount');
     
-    const groupBuys = getGroupBuys().filter(gb => gb.status === 'active');
+    let groupBuys = [];
+    
+    try {
+        if (CONFIG.USE_API) {
+            // 从后端获取活跃拼单
+            const result = await apiCall('/groups');
+            const rawData = result.data || [];
+            
+            // 转换为前端格式，只取活跃的拼单
+            groupBuys = rawData
+                .filter(item => item.status === 'active')
+                .map(item => ({
+                    id: item.id,
+                    merchant: item.title,
+                    description: item.description,
+                    category: item.category === '美食' ? 'food' : (item.category === '日用品' ? 'supermarket' : 'other'),
+                    campus: item.location,
+                    totalAmount: 0,
+                    currentCount: item.current_count,
+                    targetCount: item.target_count,
+                    deadline: item.expire_time,
+                    wechatId: item.organizer,
+                    image: item.image,
+                    status: item.status,
+                    createdAt: item.created_at
+                }));
+        } else {
+            groupBuys = getGroupBuys().filter(gb => gb.status === 'active');
+        }
+    } catch (error) {
+        console.error('获取推荐列表失败:', error);
+        groupBuys = [];
+    }
     
     if (groupBuys.length === 0) {
         recommendationSection.style.display = 'none';
         return;
     }
     
-    // 始终显示4个推荐：优先使用匹配用户偏好的拼单，其次使用最新的活跃拼单
-    let recommendations = [];
+    // 显示前4个最新的活跃拼单作为推荐
+    const recommendations = groupBuys.slice(0, 4);
     
-    // 获取用户数据
-    const userData = getUserData();
-    
-    // 如果有历史偏好，优先匹配
-    if (userData.history && userData.history.length > 0) {
-        const topHistory = userData.history
-            .sort((a, b) => (b.count || 1) - (a.count || 1))
-            .slice(0, 3);
-        
-        topHistory.forEach(h => {
-            const matches = groupBuys.filter(gb => 
-                gb.campus === h.campus && gb.category === h.category
-            );
-            recommendations.push(...matches);
-        });
-    }
-    
-    // 如果推荐不够4个，补充最新的拼单
-    if (recommendations.length < 4) {
-        const seen = new Set(recommendations.map(r => r.id));
-        const latestGroupBuys = groupBuys
-            .filter(gb => !seen.has(gb.id))
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        
-        const needed = 4 - recommendations.length;
-        recommendations.push(...latestGroupBuys.slice(0, needed));
-    }
-    
-    // 去重并限制为4个
-    const seen = new Set();
-    recommendations = recommendations.filter(rb => {
-        if (seen.has(rb.id)) return false;
-        seen.add(rb.id);
-        return true;
-    }).slice(0, 4);
-    
-    // 确保至少显示4个推荐（如果活跃拼单足够）
-    if (recommendations.length < 4 && groupBuys.length >= 4) {
-        const existingIds = new Set(recommendations.map(r => r.id));
-        const additionalNeeded = 4 - recommendations.length;
-        const additionalGroupBuys = groupBuys
-            .filter(gb => !existingIds.has(gb.id))
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-            .slice(0, additionalNeeded);
-        recommendations.push(...additionalGroupBuys);
-    }
-    
-    // 始终显示推荐区域
-    if (recommendations.length > 0) {
-        recommendationSection.style.display = 'block';
-        recommendationCount.textContent = `${recommendations.length}个推荐`;
-        recommendationList.innerHTML = '';
-        recommendations.forEach((rb, index) => {
-            recommendationList.appendChild(renderRecommendationCard(rb, index));
-        });
-    } else {
-        recommendationSection.style.display = 'none';
-    }
+    recommendationSection.style.display = 'block';
+    recommendationCount.textContent = `${recommendations.length}个推荐`;
+    recommendationList.innerHTML = '';
+    recommendations.forEach((rb, index) => {
+        recommendationList.appendChild(renderRecommendationCard(rb, index));
+    });
 }
 
 /**
@@ -1384,7 +1364,7 @@ async function init() {
         await renderGroupBuyList();
         
         // 渲染推荐
-        renderRecommendations();
+        await renderRecommendations();
     } catch (error) {
         console.error('初始化失败:', error);
     }
