@@ -243,7 +243,12 @@ async function fetchGroupBuysFromAPI(campus, category) {
  */
 async function createGroupBuyToAPI(groupBuy) {
     // 转换分类名称
-    const catMap = { 'food': '美食', 'drink': '美食', 'supermarket': '日用品', 'other': '其他' };
+  const catMap = { 
+    'food': '外卖', 
+    'drink': '奶茶', 
+    'supermarket': '超市', 
+    'other': '其他' 
+};
    const apiData = {
     title: groupBuy.merchant,
     description: groupBuy.description,
