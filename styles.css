@@ -1401,65 +1401,166 @@ body {
 .card-animation-delay-4 { animation-delay: 0.4s; }
 .card-animation-delay-5 { animation-delay: 0.5s; }
 
-/* 修复推荐区域显示问题 */
+/* ========== 推荐拼单区域修复 ========== */
 .recommendation-section {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    clear: both;
-    overflow: hidden;
+    margin: 16px;
+    margin-top: 80px;  /* 增加顶部间距，避免被筛选栏遮挡 */
+    margin-bottom: 0;
+    background: transparent;
+    position: relative;
+    z-index: 5;
 }
 
-.recommendation-list {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 15px;
-    padding: 10px 0 20px 0;
-    scroll-snap-type: x mandatory;
-}
-
-.recommendation-card {
-    flex: 0 0 auto;
-    width: 280px;
-    scroll-snap-align: start;
-}
-
-/* 确保主内容区域有足够的上边距 */
-.main-content {
-    padding-top: 10px;
-}
-
-/* 筛选栏和推荐区域之间的间距 */
-.filter-bar {
-    margin-bottom: 20px;
-}
-
-/* 推荐区域标题样式 */
 .recommendation-section .section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     padding: 0 4px;
 }
 
 .recommendation-section .section-title {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 18px;
+    gap: 6px;
+    font-size: 16px;
     font-weight: 600;
-    color: #333;
+    color: #1f2937;
 }
 
 .recommendation-section .section-icon {
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .recommendation-section .section-count {
-    font-size: 13px;
-    color: #999;
-    background: #f5f5f5;
-    padding: 4px 8px;
+    font-size: 11px;
+    color: #9ca3af;
+    background: #f3f4f6;
+    padding: 2px 8px;
     border-radius: 20px;
+}
+
+.recommendation-list {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 4px 0 16px 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.recommendation-list::-webkit-scrollbar {
+    height: 3px;
+}
+
+.recommendation-list::-webkit-scrollbar-track {
+    background: #e5e7eb;
+    border-radius: 10px;
+}
+
+.recommendation-list::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 10px;
+}
+
+.recommendation-card {
+    flex: 0 0 auto;
+    width: 260px;
+    scroll-snap-align: start;
+    border-radius: 14px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+}
+
+.recommendation-card:active {
+    transform: scale(0.98);
+}
+
+/* 推荐卡片图片 */
+.recommendation-card .rec-image {
+    position: relative;
+    width: 100%;
+    height: 130px;
+    background-size: cover;
+    background-position: center;
+}
+
+.recommendation-card .rec-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.5));
+}
+
+.recommendation-card .rec-content {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    right: 12px;
+    color: white;
+}
+
+.recommendation-card .rec-merchant {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recommendation-card .rec-description {
+    font-size: 11px;
+    opacity: 0.9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recommendation-card .rec-bottom {
+    padding: 10px 12px;
+}
+
+.recommendation-card .rec-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.recommendation-card .rec-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ff6b35;
+}
+
+.recommendation-card .rec-campus {
+    font-size: 10px;
+    color: #888;
+    background: #f5f5f5;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.recommendation-card .rec-deadline {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: #aaa;
+}
+
+/* 主内容区调整 */
+.main-content {
+    padding-top: 16px;
+}
+
+/* 筛选栏固定时推荐区域不被遮挡 */
+@media (max-width: 768px) {
+    .recommendation-section {
+        margin-top: 70px;
+    }
+}
 }
