@@ -614,28 +614,18 @@ async function renderGroupBuyList() {
     }
 }
 
-/**
- * 渲染推荐列表
- */
 async function renderRecommendations() {
     const recommendationSection = document.getElementById('recommendationSection');
     const recommendationList = document.getElementById('recommendationList');
     const recommendationCount = document.getElementById('recommendationCount');
     
-    // 先确保区域可见
-    recommendationSection.style.display = 'block';
-    
     let groupBuys = [];
     
     try {
         if (CONFIG.USE_API) {
-            // 从后端获取活跃拼单
             const result = await apiCall('/groups');
             const rawData = result.data || [];
             
-            console.log('推荐数据原始返回:', rawData);
-            
-            // 转换为前端格式，只取活跃的拼单
             groupBuys = rawData
                 .filter(item => item.status === 'active')
                 .map(item => ({
@@ -661,23 +651,17 @@ async function renderRecommendations() {
         groupBuys = [];
     }
     
-    console.log('推荐拼单数据:', groupBuys);
-    
     if (groupBuys.length === 0) {
-        // 没有数据时隐藏整个区域
         recommendationSection.style.display = 'none';
         return;
     }
     
-    // 显示前4个最新的活跃拼单作为推荐
     const recommendations = groupBuys.slice(0, 4);
     
-    // 确保标题显示
     recommendationSection.style.display = 'block';
     if (recommendationCount) {
         recommendationCount.textContent = `${recommendations.length}个推荐`;
     }
-    
     recommendationList.innerHTML = '';
     recommendations.forEach((rb, index) => {
         recommendationList.appendChild(renderRecommendationCard(rb, index));
