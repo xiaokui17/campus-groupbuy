@@ -7,10 +7,8 @@
 const CONFIG = {
     STORAGE_KEY: 'campus_groupbuys',
     USER_KEY: 'campus_user_data',
-    // 根据当前环境自动选择API基础地址
-    API_BASE: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? 'http://localhost:3000/api' 
-        : 'https://www.fjxcxogytwrfgroupbuy.xyz/api',
+    // 修改：Vercel 环境下 API 使用相对路径 /api
+    API_BASE: '/api',
     USE_API: true,  // 启用后端 API，实现多人数据同步
     CATEGORY_MAP: {
         'food': { 
@@ -197,7 +195,7 @@ async function copyToClipboard(text) {
     }
 }
 
-// ==================== API 调用 ====================
+// ==================== API 调用（修改为适配 Supabase） ====================
 
 /**
  * 调用后端 API
@@ -205,8 +203,7 @@ async function copyToClipboard(text) {
 async function apiCall(endpoint, options = {}) {
     const url = `${CONFIG.API_BASE}${endpoint}`;
     const defaultHeaders = {
-        'Content-Type': 'application/json',
-        'x-user-id': getBrowserId()
+        'Content-Type': 'application/json'
     };
     
     try {
@@ -216,8 +213,9 @@ async function apiCall(endpoint, options = {}) {
         });
         const data = await response.json();
         
-        if (data.code !== 0 && data.code !== undefined) {
-            throw new Error(data.message || '请求失败');
+        // 适配 Supabase 返回格式：{ success: true, data: xxx }
+        if (data.success === false) {
+            throw new Error(data.error || '请求失败');
         }
         
         return data;
@@ -228,32 +226,36 @@ async function apiCall(endpoint, options = {}) {
 }
 
 /**
- * 从后端获取拼单列表
+ * 从后端获取拼单列表（适配 Supabase）
  */
 async function fetchGroupBuysFromAPI(campus, category) {
     const params = new URLSearchParams();
     if (campus && campus !== 'all') params.append('campus', campus);
-    if (category && category !== 'all') {
-        // 转换分类名称
-        const catMap = { 'food': '美食', 'drink': '美食', 'supermarket': '日用品', 'other': '其他' };
-        params.append('category', catMap[category] || category);
-    }
+    if (category && category !== 'all') params.append('category', category);
     const query = params.toString() ? '?' + params.toString() : '';
-    const result = await apiCall('/groupbuys' + query);
-    return result.data?.list || [];
+    const result = await apiCall('/groups' + query);
+    // 适配 Supabase 返回格式：{ success: true, data: [...] }
+    return result.data || [];
 }
 
 /**
- * 创建拼单到后端
+ * 创建拼单到后端（适配 Supabase）
  */
 async function createGroupBuyToAPI(groupBuy) {
     // 转换分类名称
     const catMap = { 'food': '美食', 'drink': '美食', 'supermarket': '日用品', 'other': '其他' };
     const apiData = {
-        ...groupBuy,
-        category: catMap[groupBuy.category] || groupBuy.category
+        title: groupBuy.merchant,
+        description: groupBuy.description,
+        category: catMap[groupBuy.category] || groupBuy.category,
+        location: groupBuy.campus,
+        currentCount: groupBuy.currentCount,
+        targetCount: groupBuy.targetCount,
+        expireTime: groupBuy.deadline,
+        image: groupBuy.image,
+        organizer: groupBuy.wechatId
     };
-    const result = await apiCall('/groupbuys', {
+    const result = await apiCall('/groups-create', {
         method: 'POST',
         body: JSON.stringify(apiData)
     });
@@ -261,7 +263,7 @@ async function createGroupBuyToAPI(groupBuy) {
 }
 
 /**
- * 参与拼单
+ * 参与拼单（预留接口）
  */
 async function joinGroupBuyToAPI(groupBuyId) {
     const result = await apiCall(`/groupbuys/${groupBuyId}/join`, {
@@ -543,6 +545,23 @@ async function renderGroupBuyList() {
                 if (categoryFilter !== 'all') {
                     groupBuys = groupBuys.filter(gb => gb.category === categoryFilter);
                 }
+            } else {
+                // 将后端数据转换为前端格式
+                groupBuys = groupBuys.map(item => ({
+                    id: item.id,
+                    merchant: item.title,
+                    description: item.description,
+                    category: item.category === '美食' ? 'food' : (item.category === '日用品' ? 'supermarket' : 'other'),
+                    campus: item.location,
+                    totalAmount: 0, // 后端没有存储总金额，需要从description解析或者默认
+                    currentCount: item.current_count,
+                    targetCount: item.target_count,
+                    deadline: item.expire_time,
+                    wechatId: item.organizer,
+                    image: item.image,
+                    status: item.status,
+                    createdAt: item.created_at
+                }));
             }
         } else {
             // 从本地存储获取
@@ -686,8 +705,25 @@ async function renderDetailContent(groupBuyId) {
     try {
         if (CONFIG.USE_API) {
             // 从后端获取详情
-            const result = await apiCall(`/groupbuys/${groupBuyId}`);
-            groupBuy = result.data;
+            const result = await apiCall(`/groups/${groupBuyId}`);
+            const item = result.data;
+            if (item) {
+                groupBuy = {
+                    id: item.id,
+                    merchant: item.title,
+                    description: item.description,
+                    category: item.category === '美食' ? 'food' : (item.category === '日用品' ? 'supermarket' : 'other'),
+                    campus: item.location,
+                    totalAmount: 0,
+                    currentCount: item.current_count,
+                    targetCount: item.target_count,
+                    deadline: item.expire_time,
+                    wechatId: item.organizer,
+                    image: item.image,
+                    status: item.status,
+                    createdAt: item.created_at
+                };
+            }
         } else {
             groupBuy = getGroupBuys().find(gb => gb.id === groupBuyId);
         }
