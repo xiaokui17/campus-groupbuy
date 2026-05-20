@@ -1433,3 +1433,33 @@ body {
 .filter-bar {
     margin-bottom: 20px;
 }
+
+/* 推荐区域标题样式 */
+.recommendation-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 0 4px;
+}
+
+.recommendation-section .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.recommendation-section .section-icon {
+    font-size: 20px;
+}
+
+.recommendation-section .section-count {
+    font-size: 13px;
+    color: #999;
+    background: #f5f5f5;
+    padding: 4px 8px;
+    border-radius: 20px;
+}
