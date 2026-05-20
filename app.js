@@ -7,8 +7,11 @@
 const CONFIG = {
     STORAGE_KEY: 'campus_groupbuys',
     USER_KEY: 'campus_user_data',
-    API_BASE: window.location.origin + '/api',  // 使用相对路径，自动适配部署环境
-    USE_API: false,  // 是否使用后端 API，设为 false 则使用本地存储
+    // 根据当前环境自动选择API基础地址
+    API_BASE: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:3000/api' 
+        : 'https://www.fjxcxogytwrfgroupbuy.xyz/api',
+    USE_API: true,  // 启用后端 API，实现多人数据同步
     CATEGORY_MAP: {
         'food': { 
             name: '外卖', 
@@ -526,6 +529,21 @@ async function renderGroupBuyList() {
         if (CONFIG.USE_API) {
             // 从后端获取数据
             groupBuys = await fetchGroupBuysFromAPI(campusFilter, categoryFilter);
+            
+            // 如果后端返回空数据，尝试从本地获取
+            if (groupBuys.length === 0) {
+                console.log('后端返回空数据，尝试从本地获取');
+                checkExpiredGroupBuys();
+                groupBuys = getGroupBuys();
+                
+                // 应用筛选
+                if (campusFilter !== 'all') {
+                    groupBuys = groupBuys.filter(gb => gb.campus === campusFilter);
+                }
+                if (categoryFilter !== 'all') {
+                    groupBuys = groupBuys.filter(gb => gb.category === categoryFilter);
+                }
+            }
         } else {
             // 从本地存储获取
             checkExpiredGroupBuys();
@@ -541,9 +559,18 @@ async function renderGroupBuyList() {
         }
     } catch (error) {
         console.error('获取拼单列表失败:', error);
-        showToast('获取数据失败', 'error');
+        showToast('获取数据失败，已切换到本地模式', 'error');
         // 降级到本地存储
+        checkExpiredGroupBuys();
         groupBuys = getGroupBuys();
+        
+        // 应用筛选
+        if (campusFilter !== 'all') {
+            groupBuys = groupBuys.filter(gb => gb.campus === campusFilter);
+        }
+        if (categoryFilter !== 'all') {
+            groupBuys = groupBuys.filter(gb => gb.category === categoryFilter);
+        }
     }
     
     // 按状态和截止时间排序
@@ -1074,14 +1101,22 @@ async function handlePublishSubmit(e) {
         };
         
         if (CONFIG.USE_API) {
-            // 使用后端 API
-            await createGroupBuyToAPI(groupBuy);
+            try {
+                // 使用后端 API
+                await createGroupBuyToAPI(groupBuy);
+                showToast('拼单发布成功！', 'success');
+            } catch (apiError) {
+                console.error('API发布失败:', apiError);
+                // API失败，保存到本地
+                addGroupBuy(groupBuy);
+                showToast('发布成功（已保存到本地）', 'success');
+            }
+        } else {
+            // 保存到本地
+            addGroupBuy(groupBuy);
+            showToast('拼单发布成功！', 'success');
         }
         
-        // 同时保存到本地（备用）
-        addGroupBuy(groupBuy);
-        
-        showToast('拼单发布成功！', 'success');
         closePublishModal();
         renderGroupBuyList();
         renderRecommendations();
@@ -1089,6 +1124,7 @@ async function handlePublishSubmit(e) {
         // 更新用户历史
         updateUserHistory(formData.campus, formData.category);
     } catch (error) {
+        console.error('发布失败:', error);
         showToast('发布失败：' + error.message, 'error');
     } finally {
         submitBtn.disabled = false;
