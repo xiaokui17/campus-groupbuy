@@ -17,6 +17,14 @@ export default async function handler(req, res) {
   
   const supabase = createClient(supabaseUrl, supabaseKey);
   
+  // 分类映射：前端选项 -> 数据库存储的值
+  const categoryMap = {
+    'food': '外卖',
+    'drink': '奶茶',
+    'supermarket': '超市',
+    'other': '其他'
+  };
+  
   try {
     let query = supabase.from('groups').select('*');
     
@@ -27,7 +35,10 @@ export default async function handler(req, res) {
     
     // 按分类筛选
     if (category && category !== 'all') {
-      query = query.eq('category', category);
+      const dbCategory = categoryMap[category];
+      if (dbCategory) {
+        query = query.eq('category', dbCategory);
+      }
     }
     
     const { data, error } = await query.order('created_at', { ascending: false });
