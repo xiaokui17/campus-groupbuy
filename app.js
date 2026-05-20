@@ -473,18 +473,21 @@ function renderGroupBuyCard(groupBuy, index) {
  */
 function renderRecommendationCard(groupBuy, index) {
     const campusName = CONFIG.CAMPUS_MAP[groupBuy.campus] || groupBuy.campus;
-  const perPerson = calculateAA(groupBuy.totalAmount, groupBuy.targetCount);
+    const perPerson = calculateAA(groupBuy.totalAmount, groupBuy.targetCount);
     
     const card = document.createElement('div');
     card.className = 'recommendation-card';
     card.dataset.id = groupBuy.id;
     
-    // 本地图片路径
-    const localImages = ['images/rec1.png', 'images/rec2.png', 'images/rec3.png', 'images/rec4.png'];
-    const bgImage = localImages[index % localImages.length];
+    // 使用发布时选择的图片，如果没有则使用默认分类图片
+    let imageUrl = groupBuy.image;
+    if (!imageUrl) {
+        const categoryInfo = CONFIG.CATEGORY_MAP[groupBuy.category];
+        imageUrl = categoryInfo?.image || CONFIG.DEFAULT_IMAGE;
+    }
     
     card.innerHTML = `
-        <div class="rec-image" style="background-image: url('${bgImage}')">
+        <div class="rec-image" style="background-image: url('${imageUrl}')">
             <div class="rec-overlay"></div>
             <div class="rec-content">
                 <div class="rec-merchant">${escapeHtml(groupBuy.merchant)}</div>
