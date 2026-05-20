@@ -245,75 +245,64 @@ body {
 
 /* ==================== 推荐区域 ==================== */
 .recommendation-section {
+    margin: 16px;
+    margin-top: 80px;
+    margin-bottom: 20px;
+    background: transparent;
     position: relative;
-    padding-top: var(--space-lg);
-    padding-left: var(--space-md);
-    padding-right: var(--space-md);
-    padding-bottom: var(--space-lg);
-    background: var(--bg-color);
-    min-height: 200px;
-    z-index: 1;
-}
-
-.section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: var(--space-md);
-}
-
-.recommendation-tip {
-    text-align: center;
-    font-size: 14px;
-    color: #92400e;
-    margin-bottom: var(--space-md);
-    padding: 8px 16px;
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-    border-radius: var(--radius-full);
-    display: inline-block;
-    margin-left: auto;
-    margin-right: auto;
+    z-index: 5;
 }
 
 .recommendation-section .section-header {
-    text-align: center;
-    flex-direction: column;
-    gap: var(--space-xs);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 0 4px;
 }
 
-.recommendation-section .section-header h3 {
-    margin: 0;
-}
-
-.section-header h3 {
+.recommendation-section .section-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-size: 16px;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #1f2937;
 }
 
-.recommendation-count,
-.count-badge {
-    font-size: 12px;
-    color: var(--text-muted);
-    background: var(--border-light);
+.recommendation-section .section-icon {
+    font-size: 18px;
+}
+
+.recommendation-section .section-count {
+    font-size: 11px;
+    color: #9ca3af;
+    background: #f3f4f6;
     padding: 2px 8px;
-    border-radius: var(--radius-full);
+    border-radius: 20px;
 }
 
-.recommendation-scroll {
+.recommendation-list {
     display: flex;
-    gap: var(--space-md);
     overflow-x: auto;
-    overflow-y: visible;
-    scrollbar-width: none;
-    padding-bottom: var(--space-sm);
-    min-height: 180px;
-    align-items: stretch;
-    justify-content: center;
+    gap: 12px;
+    padding: 4px 0 16px 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
 }
 
-.recommendation-scroll::-webkit-scrollbar {
-    display: none;
+.recommendation-list::-webkit-scrollbar {
+    height: 3px;
+}
+
+.recommendation-list::-webkit-scrollbar-track {
+    background: #e5e7eb;
+    border-radius: 10px;
+}
+
+.recommendation-list::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 10px;
 }
 
 /* ==================== 拼单卡片列表 ==================== */
@@ -533,16 +522,14 @@ body {
 
 /* ==================== 推荐卡片 ==================== */
 .recommendation-card {
-    flex-shrink: 0;
-    min-width: 280px;
-    max-width: 320px;
-    height: 180px;
-    border-radius: var(--radius-lg);
+    flex: 0 0 auto;
+    width: 260px;
+    border-radius: 14px;
     overflow: hidden;
     cursor: pointer;
     transition: var(--transition-normal);
     box-shadow: var(--shadow-md);
-    position: relative;
+    background: white;
 }
 
 .recommendation-card:hover {
@@ -550,9 +537,13 @@ body {
     box-shadow: var(--shadow-lg);
 }
 
+.recommendation-card:active {
+    transform: scale(0.98);
+}
+
 .rec-image {
     width: 100%;
-    height: 100%;
+    height: 130px;
     background-size: cover;
     background-position: center;
     position: relative;
@@ -574,25 +565,24 @@ body {
 
 .rec-content {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: var(--space-md);
+    bottom: 10px;
+    left: 12px;
+    right: 12px;
     color: white;
 }
 
 .rec-merchant {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 700;
-    margin-bottom: var(--space-xs);
+    margin-bottom: 2px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .rec-description {
-    font-size: 13px;
+    font-size: 11px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -603,12 +593,8 @@ body {
 }
 
 .rec-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: var(--space-md);
-    color: white;
+    padding: 10px 12px;
+    background: white;
 }
 
 .rec-footer {
@@ -617,25 +603,29 @@ body {
     align-items: center;
     font-size: 14px;
     gap: var(--space-md);
+    margin-bottom: 6px;
 }
 
 .rec-deadline {
     display: flex;
     align-items: center;
     gap: 4px;
-    font-size: 12px;
-    margin-top: var(--space-xs);
-    opacity: 0.9;
+    font-size: 10px;
+    color: #aaa;
 }
 
 .rec-price {
     font-weight: 700;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-size: 15px;
+    color: #ff6b35;
 }
 
 .rec-campus {
-    font-size: 12px;
-    opacity: 0.85;
+    font-size: 10px;
+    color: #888;
+    background: #f5f5f5;
+    padding: 2px 8px;
+    border-radius: 12px;
 }
 
 /* ==================== 空状态 ==================== */
@@ -1400,220 +1390,3 @@ body {
 .card-animation-delay-3 { animation-delay: 0.3s; }
 .card-animation-delay-4 { animation-delay: 0.4s; }
 .card-animation-delay-5 { animation-delay: 0.5s; }
-
-/* ========== 推荐拼单区域修复 ========== */
-.recommendation-section {
-    margin: 16px;
-    margin-top: 80px;  /* 增加顶部间距，避免被筛选栏遮挡 */
-    margin-bottom: 0;
-    background: transparent;
-    position: relative;
-    z-index: 5;
-}
-
-.recommendation-section .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    padding: 0 4px;
-}
-
-.recommendation-section .section-title {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #1f2937;
-}
-
-.recommendation-section .section-icon {
-    font-size: 18px;
-}
-
-.recommendation-section .section-count {
-    font-size: 11px;
-    color: #9ca3af;
-    background: #f3f4f6;
-    padding: 2px 8px;
-    border-radius: 20px;
-}
-
-.recommendation-list {
-    display: flex;
-    overflow-x: auto;
-    gap: 12px;
-    padding: 4px 0 16px 0;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-}
-
-.recommendation-list::-webkit-scrollbar {
-    height: 3px;
-}
-
-.recommendation-list::-webkit-scrollbar-track {
-    background: #e5e7eb;
-    border-radius: 10px;
-}
-
-.recommendation-list::-webkit-scrollbar-thumb {
-    background: #9ca3af;
-    border-radius: 10px;
-}
-
-.recommendation-card {
-    flex: 0 0 auto;
-    width: 260px;
-    scroll-snap-align: start;
-    border-radius: 14px;
-    overflow: hidden;
-    background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    transition: transform 0.2s;
-}
-
-.recommendation-card:active {
-    transform: scale(0.98);
-}
-
-/* 推荐卡片图片 */
-.recommendation-card .rec-image {
-    position: relative;
-    width: 100%;
-    height: 130px;
-    background-size: cover;
-    background-position: center;
-}
-
-.recommendation-card .rec-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.5));
-}
-
-.recommendation-card .rec-content {
-    position: absolute;
-    bottom: 10px;
-    left: 12px;
-    right: 12px;
-    color: white;
-}
-
-.recommendation-card .rec-merchant {
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 2px;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.recommendation-card .rec-description {
-    font-size: 11px;
-    opacity: 0.9;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.recommendation-card .rec-bottom {
-    padding: 10px 12px;
-}
-
-.recommendation-card .rec-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-}
-
-.recommendation-card .rec-price {
-    font-size: 15px;
-    font-weight: 700;
-    color: #ff6b35;
-}
-
-.recommendation-card .rec-campus {
-    font-size: 10px;
-    color: #888;
-    background: #f5f5f5;
-    padding: 2px 8px;
-    border-radius: 12px;
-}
-
-.recommendation-card .rec-deadline {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 10px;
-    color: #aaa;
-}
-
-/* 主内容区调整 */
-.main-content {
-    padding-top: 16px;
-}
-
-/* 筛选栏固定时推荐区域不被遮挡 */
-@media (max-width: 768px) {
-    .recommendation-section {
-        margin-top: 70px;
-    }
-
-
-    /* ========== 强制修复推荐区域标题显示 ========== */
-.recommendation-section {
-    display: block !important;
-    margin: 16px !important;
-    margin-top: 70px !important;
-    padding: 0 !important;
-}
-
-.recommendation-section .section-header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    margin-bottom: 12px !important;
-    padding: 0 4px !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-.recommendation-section .section-title {
-    display: flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-}
-
-.recommendation-section .section-title .section-icon {
-    display: inline-block !important;
-    font-size: 18px !important;
-}
-
-.recommendation-section .section-title span:last-child {
-    display: inline-block !important;
-    font-size: 16px !important;
-    font-weight: 600 !important;
-    color: #1f2937 !important;
-}
-
-.recommendation-section .section-count {
-    display: inline-block !important;
-    font-size: 12px !important;
-    color: #9ca3af !important;
-    background: #f3f4f6 !important;
-    padding: 2px 8px !important;
-    border-radius: 20px !important;
-}
-
-.recommendation-list {
-    display: flex !important;
-    overflow-x: auto !important;
-    gap: 12px !important;
-    padding: 4px 0 16px 0 !important;
-}
-}
-}
