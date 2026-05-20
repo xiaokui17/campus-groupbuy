@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   const supabase = createClient(supabaseUrl, supabaseKey);
   
   try {
-    const { title, description, category, location, currentCount, targetCount, expireTime, image, organizer } = req.body;
+    const { title, description, category, location, currentCount, targetCount, totalAmount, expireTime, image, organizer } = req.body;
     
     const newGroup = {
       title,
@@ -23,6 +23,7 @@ export default async function handler(req, res) {
       location,
       current_count: currentCount || 1,
       target_count: targetCount,
+      total_amount: totalAmount || 0,
       expire_time: expireTime,
       image,
       organizer,
@@ -37,6 +38,7 @@ export default async function handler(req, res) {
     if (error) throw error;
     res.status(200).json({ success: true, data: data[0] });
   } catch (error) {
+    console.error('创建失败:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 }
