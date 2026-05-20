@@ -680,7 +680,7 @@ async function renderDetailContent(groupBuyId) {
     try {
         if (CONFIG.USE_API) {
             // 从后端获取详情
-            const result = await apiCall(`/groups/${groupBuyId}`);
+            const result = await apiCall(`/group?id=${groupBuyId}`);
             const item = result.data;
             if (item) {
                 groupBuy = {
