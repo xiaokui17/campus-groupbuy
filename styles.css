@@ -1400,3 +1400,36 @@ body {
 .card-animation-delay-3 { animation-delay: 0.3s; }
 .card-animation-delay-4 { animation-delay: 0.4s; }
 .card-animation-delay-5 { animation-delay: 0.5s; }
+
+/* 修复推荐区域显示问题 */
+.recommendation-section {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    clear: both;
+    overflow: hidden;
+}
+
+.recommendation-list {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px 0 20px 0;
+    scroll-snap-type: x mandatory;
+}
+
+.recommendation-card {
+    flex: 0 0 auto;
+    width: 280px;
+    scroll-snap-align: start;
+}
+
+/* 确保主内容区域有足够的上边距 */
+.main-content {
+    padding-top: 10px;
+}
+
+/* 筛选栏和推荐区域之间的间距 */
+.filter-bar {
+    margin-bottom: 20px;
+}
